@@ -1,0 +1,6 @@
+framework module Pods_ApplePicking {
+  umbrella header "Pods-ApplePicking-umbrella.h"
+
+  export *
+  module * { export * }
+}
