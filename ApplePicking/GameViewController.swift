@@ -19,12 +19,19 @@ class GameViewController: UIViewController {
     private var highScoreLabel: UILabel!
     private var resetButton: UIButton!
     
+    // High scores array
+    private var highScores: [Int] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupGame()
         setupBackgroundMusic()
         // Load high score from UserDefaults
         highScore = UserDefaults.standard.integer(forKey: "highScore")
+        // Load high scores array
+        if let savedHighScores = UserDefaults.standard.array(forKey: "highScoresArray") as? [Int] {
+            highScores = savedHighScores
+        }
         highScoreLabel.text = "High Score: \(highScore)"
     }
     
@@ -63,7 +70,7 @@ class GameViewController: UIViewController {
             make.height.equalTo(40)
         }
         
-        // High Score Label
+        // High Score Label with tap gesture
         highScoreLabel = UILabel()
         highScoreLabel.text = "High Score: \(highScore)"
         highScoreLabel.textColor = .white
@@ -71,6 +78,9 @@ class GameViewController: UIViewController {
         highScoreLabel.textAlignment = .center
         highScoreLabel.layer.cornerRadius = 10
         highScoreLabel.clipsToBounds = true
+        highScoreLabel.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showHighScoresList))
+        highScoreLabel.addGestureRecognizer(tapGesture)
         view.addSubview(highScoreLabel)
         highScoreLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -105,14 +115,14 @@ class GameViewController: UIViewController {
         }
     }
     
-  func updateTimerBarLayout() {
-      timerBar.snp.makeConstraints { make in
-          make.left.equalTo(gameView.gridContainer.snp.left)
-          make.right.equalTo(gameView.gridContainer.snp.right)
-          make.bottom.equalTo(gameView.gridContainer.snp.top).offset(-10)
-          make.height.equalTo(4) // Original height will be doubled by the transform
-      }
-  }
+    func updateTimerBarLayout() {
+        timerBar.snp.makeConstraints { make in
+            make.left.equalTo(gameView.gridContainer.snp.left)
+            make.right.equalTo(gameView.gridContainer.snp.right)
+            make.bottom.equalTo(gameView.gridContainer.snp.top).offset(-10)
+            make.height.equalTo(4) // Original height will be doubled by the transform
+        }
+    }
     
     func startTimer() {
         initialTime = timeRemaining
@@ -133,7 +143,7 @@ class GameViewController: UIViewController {
     }
     
     func setupBackgroundMusic() {
-        if let path = Bundle.main.path(forResource: "apple picking tunes", ofType: "mp3") {
+        if let path = Bundle.main.path(forResource: "apple picking tunes retro", ofType: "mp3") {
             let url = URL(fileURLWithPath: path)
             do {
                 audioPlayer = try AVAudioPlayer(contentsOf: url)
@@ -147,7 +157,21 @@ class GameViewController: UIViewController {
         }
     }
     
+    func restartBackgroundMusic() {
+        // Stop any current playback
+        audioPlayer?.stop()
+        
+        // Reset to beginning and play again
+        audioPlayer?.currentTime = 0
+        audioPlayer?.play()
+    }
+    
     @objc func resetGame() {
+        // Haptic feedback
+        let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+        feedbackGenerator.prepare()
+        feedbackGenerator.impactOccurred()
+        
         // Remove game over view if it exists
         gameOverView?.removeFromSuperview()
         gameOverView = nil
@@ -168,16 +192,33 @@ class GameViewController: UIViewController {
         // Restart timer
         timer?.invalidate()
         startTimer()
+        
+        // Restart background music
+        restartBackgroundMusic()
     }
     
     func endGame() {
         timer?.invalidate()
         
+        // Add score to high scores array
+        highScores.append(score)
+        
+        // Sort high scores in descending order
+        highScores.sort(by: >)
+        
+        // Keep only top 10 scores
+        if highScores.count > 10 {
+            highScores = Array(highScores.prefix(10))
+        }
+        
+        // Save high scores array
+        UserDefaults.standard.set(highScores, forKey: "highScoresArray")
+        
         // Check for high score
         if score > highScore {
             highScore = score
             UserDefaults.standard.set(highScore, forKey: "highScore")
-          UserDefaults.standard.synchronize()
+            UserDefaults.standard.synchronize()
             
             // Update high score label
             highScoreLabel.text = "High Score: \(highScore)"
@@ -185,6 +226,114 @@ class GameViewController: UIViewController {
         
         // Show custom game over screen
         showGameOverScreen()
+    }
+    
+    @objc func showHighScoresList() {
+        // Haptic feedback
+        let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+        feedbackGenerator.prepare()
+        feedbackGenerator.impactOccurred()
+        
+        // Create high scores view
+        let highScoresView = UIView()
+        highScoresView.backgroundColor = UIColor(white: 0, alpha: 0.7)
+        view.addSubview(highScoresView)
+        highScoresView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        // Container view
+        let containerView = UIView()
+        containerView.backgroundColor = UIColor(white: 1, alpha: 0.95)
+        containerView.layer.cornerRadius = 20
+        highScoresView.addSubview(containerView)
+        containerView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(300)
+            make.height.equalTo(400)
+        }
+        
+        // Title
+        let titleLabel = UILabel()
+        titleLabel.text = "Top 10 High Scores"
+        titleLabel.textAlignment = .center
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 24)
+        titleLabel.textColor = UIColor(red: 0, green: 0.7, blue: 0, alpha: 1.0)
+        containerView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(20)
+            make.left.right.equalToSuperview()
+            make.height.equalTo(30)
+        }
+        
+        // High scores list
+        let scoresStackView = UIStackView()
+        scoresStackView.axis = .vertical
+        scoresStackView.spacing = 10
+        scoresStackView.distribution = .fillEqually
+        containerView.addSubview(scoresStackView)
+        scoresStackView.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(20)
+            make.left.equalToSuperview().offset(30)
+            make.right.equalToSuperview().offset(-30)
+            make.bottom.equalToSuperview().offset(-100)
+        }
+        
+        // Add score labels
+        for (index, score) in highScores.prefix(10).enumerated() {
+            let rankLabel = UILabel()
+            rankLabel.text = "\(index + 1). \(score)"
+            rankLabel.textAlignment = .left
+            rankLabel.font = UIFont.systemFont(ofSize: 18)
+            rankLabel.textColor = .black
+            scoresStackView.addArrangedSubview(rankLabel)
+        }
+        
+        // If we have fewer than 10 scores, add placeholders
+        for _ in highScores.count..<10 {
+            let placeholder = UILabel()
+            placeholder.text = "---"
+            placeholder.textAlignment = .left
+            placeholder.font = UIFont.systemFont(ofSize: 18)
+            placeholder.textColor = .lightGray
+            scoresStackView.addArrangedSubview(placeholder)
+        }
+        
+        // Close button
+        let closeButton = UIButton()
+        closeButton.setTitle("Close", for: .normal)
+        closeButton.backgroundColor = UIColor(red: 0, green: 0.7, blue: 0, alpha: 1.0)
+        closeButton.layer.cornerRadius = 10
+        closeButton.addTarget(self, action: #selector(closeHighScoresList(_:)), for: .touchUpInside)
+        containerView.addSubview(closeButton)
+        closeButton.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().offset(-20)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(200)
+            make.height.equalTo(50)
+        }
+        
+        // Animate appearance
+        containerView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.2, options: [], animations: {
+            containerView.transform = .identity
+        })
+    }
+    
+    @objc func closeHighScoresList(_ sender: UIButton) {
+        // Haptic feedback
+        let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+        feedbackGenerator.prepare()
+        feedbackGenerator.impactOccurred()
+        
+        // Remove high scores view
+        if let highScoresView = sender.superview?.superview {
+            UIView.animate(withDuration: 0.3, animations: {
+                highScoresView.alpha = 0
+            }, completion: { _ in
+                highScoresView.removeFromSuperview()
+            })
+        }
     }
     
     func showGameOverScreen() {
@@ -291,6 +440,7 @@ class GameViewController: UIViewController {
         scoreLabel.text = "Score: \(score)"
     }
 }
+
 
 class GameView: UIView {
     private var feedbackGenerator: UIImpactFeedbackGenerator?
@@ -472,10 +622,12 @@ class GameView: UIView {
       
       switch gesture.state {
       case .began:
-          // Start drawing selection
+          // Start drawing selection with light feedback
           startPoint = location
           createSelectionLayer()
-          feedbackGenerator?.impactOccurred()
+          // Light impact when starting selection
+          let lightFeedback = UIImpactFeedbackGenerator(style: .light)
+          lightFeedback.impactOccurred()
           
       case .changed:
           // Update selection
@@ -490,15 +642,24 @@ class GameView: UIView {
           }
           
           // Process the selection
-          processSelection()
-          feedbackGenerator?.impactOccurred()
+          let selectionWasSuccessful = processSelection()
+          
+          // Different feedback based on selection success
+          if selectionWasSuccessful {
+              // Rigid impact for successful selection
+              let rigidFeedback = UIImpactFeedbackGenerator(style: .rigid)
+              rigidFeedback.impactOccurred()
+          } else {
+              // Medium impact for unsuccessful selection
+              let mediumFeedback = UIImpactFeedbackGenerator(style: .medium)
+              mediumFeedback.impactOccurred(intensity: 0.4)
+          }
           
           // Clear the selection
           selectionLayer?.removeFromSuperlayer()
           selectionLayer = nil
           startPoint = nil
           endPoint = nil
-          feedbackGenerator?.prepare()
           
       default:
           break
@@ -580,51 +741,53 @@ class GameView: UIView {
       layer.path = path.cgPath
   }
     
-    func processSelection() {
-        guard let start = startPoint, let end = endPoint else { return }
-        
-        // Convert touch points to grid positions
-        guard let startGridPos = pointToGridPosition(start),
-              let endGridPos = pointToGridPosition(end) else {
-            return
-        }
-        
-        // Calculate min and max coordinates to support selection in any direction
-        let minRow = min(startGridPos.row, endGridPos.row)
-        let maxRow = max(startGridPos.row, endGridPos.row)
-        let minCol = min(startGridPos.col, endGridPos.col)
-        let maxCol = max(startGridPos.col, endGridPos.col)
-        
-        // Get all cells in selection
-        var selectedCells: [AppleCell] = []
-        var sum = 0
-        
-        for row in minRow...maxRow {
-            for col in minCol...maxCol {
-                let cell = grid[row][col]
-                if cell.value > 0 {
-                    selectedCells.append(cell)
-                    sum += cell.value
-                }
-            }
-        }
-        
-        // Check if sum is 10
-        if sum == 10 {
-            // Valid selection, remove apples
-            for cell in selectedCells {
-                animateRemoveApple(cell)
-            }
-            
-            // Update score (more points for larger groups)
-            if let gameVC = findViewController() as? GameViewController {
-                gameVC.updateScore(points: selectedCells.count)
-            }
-        } else {
-            // Invalid selection, show feedback
-            flashSelection(startRow: minRow, startCol: minCol, endRow: maxRow, endCol: maxCol)
-        }
-    }
+  func processSelection() -> Bool {
+      guard let start = startPoint, let end = endPoint else { return false }
+      
+      // Convert touch points to grid positions
+      guard let startGridPos = pointToGridPosition(start),
+            let endGridPos = pointToGridPosition(end) else {
+          return false
+      }
+      
+      // Calculate min and max coordinates to support selection in any direction
+      let minRow = min(startGridPos.row, endGridPos.row)
+      let maxRow = max(startGridPos.row, endGridPos.row)
+      let minCol = min(startGridPos.col, endGridPos.col)
+      let maxCol = max(startGridPos.col, endGridPos.col)
+      
+      // Get all cells in selection
+      var selectedCells: [AppleCell] = []
+      var sum = 0
+      
+      for row in minRow...maxRow {
+          for col in minCol...maxCol {
+              let cell = grid[row][col]
+              if cell.value > 0 {
+                  selectedCells.append(cell)
+                  sum += cell.value
+              }
+          }
+      }
+      
+      // Check if sum is 10
+      if sum == 10 {
+          // Valid selection, remove apples
+          for cell in selectedCells {
+              animateRemoveApple(cell)
+          }
+          
+          // Update score (more points for larger groups)
+          if let gameVC = findViewController() as? GameViewController {
+              gameVC.updateScore(points: selectedCells.count)
+          }
+          return true
+      } else {
+          // Invalid selection, show feedback
+          flashSelection(startRow: minRow, startCol: minCol, endRow: maxRow, endCol: maxCol)
+          return false
+      }
+  }
     
     func animateRemoveApple(_ cell: AppleCell) {
         UIView.animate(withDuration: 0.3, animations: {
