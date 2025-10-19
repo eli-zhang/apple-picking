@@ -119,18 +119,18 @@ class GameViewController: UIViewController {
         mainMenuButton.addTarget(self, action: #selector(returnToMainMenu), for: .touchUpInside)
         view.addSubview(mainMenuButton)
         
-        // Layout buttons side by side
-        resetButton.snp.makeConstraints { make in
+        // Layout buttons side by side (swapped positions)
+        mainMenuButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
             make.left.equalToSuperview().offset(20)
-            make.right.equalTo(mainMenuButton.snp.left).offset(-10)
+            make.right.equalTo(resetButton.snp.left).offset(-10)
             make.height.equalTo(40)
         }
         
-        mainMenuButton.snp.makeConstraints { make in
+        resetButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
             make.right.equalToSuperview().offset(-20)
-            make.width.equalTo(resetButton.snp.width)
+            make.width.equalTo(mainMenuButton.snp.width)
             make.height.equalTo(40)
         }
     }

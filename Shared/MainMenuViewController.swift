@@ -14,6 +14,12 @@ class MainMenuViewController: UIViewController {
     private var startGameButton: UIButton!
     private var optionsButton: UIButton!
     
+    // Options overlay properties
+    private var musicToggle: UISwitch!
+    private var musicLabel: UILabel!
+    private var vibrationToggle: UISwitch!
+    private var vibrationLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -83,28 +89,10 @@ class MainMenuViewController: UIViewController {
     private func createAppleImage(size: CGSize) -> UIView {
         let appleView = UIView(frame: CGRect(origin: .zero, size: size))
         
-        let renderer = UIGraphicsImageRenderer(size: size)
-        let appleImage = renderer.image { ctx in
-            // Draw apple shape
-            let rect = CGRect(x: size.width * 0.1,
-                             y: size.height * 0.1,
-                             width: size.width * 0.8,
-                             height: size.height * 0.8)
-            
-            let path = UIBezierPath(ovalIn: rect)
-            UIColor.red.setFill()
-            path.fill()
-            
-            // Draw stem
-            let stemPath = UIBezierPath()
-            stemPath.move(to: CGPoint(x: size.width * 0.5, y: size.height * 0.1))
-            stemPath.addLine(to: CGPoint(x: size.width * 0.55, y: 0))
-            UIColor.brown.setStroke()
-            stemPath.lineWidth = 6
-            stemPath.stroke()
-        }
-        
-        let imageView = UIImageView(image: appleImage)
+        // Use the new Apple asset
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "Apple")
+        imageView.contentMode = .scaleAspectFit
         appleView.addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -136,9 +124,167 @@ class MainMenuViewController: UIViewController {
             feedbackGenerator.impactOccurred()
         }
         
-        // Present options view controller
-        let optionsVC = OptionsViewController()
-        present(optionsVC, animated: true)
+        // Show options overlay (similar to high scores)
+        showOptionsOverlay()
+    }
+    
+    private func showOptionsOverlay() {
+        // Create options overlay view
+        let optionsView = UIView()
+        optionsView.backgroundColor = UIColor(white: 0, alpha: 0.7)
+        optionsView.alpha = 0
+        view.addSubview(optionsView)
+        optionsView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        // Container view
+        let containerView = UIView()
+        containerView.backgroundColor = UIColor(white: 1, alpha: 0.95)
+        containerView.layer.cornerRadius = 20
+        containerView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        optionsView.addSubview(containerView)
+        containerView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(320)
+            make.height.equalTo(300)
+        }
+        
+        // Title
+        let titleLabel = UILabel()
+        titleLabel.text = "Options"
+        titleLabel.textAlignment = .center
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 28)
+        titleLabel.textColor = UIColor(red: 0, green: 0.7, blue: 0, alpha: 1.0)
+        containerView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(20)
+            make.left.right.equalToSuperview()
+            make.height.equalTo(40)
+        }
+        
+        // Music toggle section
+        let musicStackView = createToggleSection(
+            title: "Background Music",
+            toggle: &musicToggle,
+            label: &musicLabel
+        )
+        containerView.addSubview(musicStackView)
+        musicStackView.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(30)
+            make.left.right.equalToSuperview().inset(20)
+            make.height.equalTo(50)
+        }
+        
+        // Vibration toggle section
+        let vibrationStackView = createToggleSection(
+            title: "Vibrations",
+            toggle: &vibrationToggle,
+            label: &vibrationLabel
+        )
+        containerView.addSubview(vibrationStackView)
+        vibrationStackView.snp.makeConstraints { make in
+            make.top.equalTo(musicStackView.snp.bottom).offset(20)
+            make.left.right.equalToSuperview().inset(20)
+            make.height.equalTo(50)
+        }
+        
+        // Close button
+        let closeButton = UIButton()
+        closeButton.setTitle("Close", for: .normal)
+        closeButton.backgroundColor = UIColor(red: 0, green: 0.7, blue: 0, alpha: 0.7)
+        closeButton.layer.cornerRadius = 15
+        closeButton.addTarget(self, action: #selector(closeOptionsOverlay(_:)), for: .touchUpInside)
+        containerView.addSubview(closeButton)
+        closeButton.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().offset(-20)
+            make.centerX.equalToSuperview()
+            make.width.equalTo(120)
+            make.height.equalTo(50)
+        }
+        
+        // Load settings
+        loadOptionsSettings()
+        
+        // Animate the appearance
+        UIView.animate(withDuration: 0.3, animations: {
+            optionsView.alpha = 1
+            containerView.transform = CGAffineTransform.identity
+        })
+    }
+    
+    private func createToggleSection(title: String, toggle: inout UISwitch!, label: inout UILabel!) -> UIStackView {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.alignment = .center
+        stackView.spacing = 15
+        
+        // Label
+        label = UILabel()
+        label.text = title
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.textColor = UIColor(red: 0, green: 0.7, blue: 0, alpha: 1.0)
+        stackView.addArrangedSubview(label)
+        
+        // Toggle switch
+        toggle = UISwitch()
+        toggle.onTintColor = UIColor(red: 0, green: 0.7, blue: 0, alpha: 1.0)
+        toggle.addTarget(self, action: #selector(optionsToggleChanged(_:)), for: .valueChanged)
+        stackView.addArrangedSubview(toggle)
+        
+        return stackView
+    }
+    
+    private func loadOptionsSettings() {
+        // Load music setting (default to true)
+        let musicEnabled = UserDefaults.standard.object(forKey: "backgroundMusicEnabled") as? Bool ?? true
+        musicToggle.isOn = musicEnabled
+        
+        // Load vibration setting (default to true)
+        let vibrationEnabled = UserDefaults.standard.object(forKey: "vibrationEnabled") as? Bool ?? true
+        vibrationToggle.isOn = vibrationEnabled
+    }
+    
+    @objc private func optionsToggleChanged(_ sender: UISwitch) {
+        // Save the setting first
+        if sender == musicToggle {
+            UserDefaults.standard.set(sender.isOn, forKey: "backgroundMusicEnabled")
+            print("Music setting saved: \(sender.isOn)")
+        } else if sender == vibrationToggle {
+            UserDefaults.standard.set(sender.isOn, forKey: "vibrationEnabled")
+            print("Vibration setting saved: \(sender.isOn)")
+        }
+        
+        // Synchronize UserDefaults to ensure the setting is saved immediately
+        UserDefaults.standard.synchronize()
+        
+        // Only provide haptic feedback if vibrations are enabled
+        let vibrationEnabled = UserDefaults.standard.object(forKey: "vibrationEnabled") as? Bool ?? true
+        if vibrationEnabled {
+            let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+            feedbackGenerator.prepare()
+            feedbackGenerator.impactOccurred()
+        }
+    }
+    
+    @objc private func closeOptionsOverlay(_ sender: UIButton) {
+        // Haptic feedback
+        let vibrationEnabled = UserDefaults.standard.object(forKey: "vibrationEnabled") as? Bool ?? true
+        if vibrationEnabled {
+            let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+            feedbackGenerator.prepare()
+            feedbackGenerator.impactOccurred()
+        }
+        
+        // Remove options view
+        if let optionsView = sender.superview?.superview {
+            UIView.animate(withDuration: 0.3, animations: {
+                optionsView.alpha = 0
+            }, completion: { _ in
+                optionsView.removeFromSuperview()
+            })
+        }
     }
 }
 
