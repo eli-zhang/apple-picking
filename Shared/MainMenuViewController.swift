@@ -12,6 +12,7 @@ class MainMenuViewController: UIViewController {
     private var appleView: UIView!
     private var titleLabel: UILabel!
     private var startGameButton: UIButton!
+    private var dailySeedButton: UIButton!
     private var optionsButton: UIButton!
     
     // Options overlay properties
@@ -64,13 +65,24 @@ class MainMenuViewController: UIViewController {
             make.height.equalTo(60)
         }
         
+        // Create daily seed button
+        dailySeedButton = createButton(title: "Daily Seed", backgroundColor: UIColor(red: 0.2, green: 0.4, blue: 0.8, alpha: 0.7))
+        dailySeedButton.addTarget(self, action: #selector(dailySeedTapped), for: .touchUpInside)
+        view.addSubview(dailySeedButton)
+        dailySeedButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(startGameButton.snp.bottom).offset(30)
+            make.width.equalTo(250)
+            make.height.equalTo(60)
+        }
+        
         // Create options button
         optionsButton = createButton(title: "Options", backgroundColor: UIColor(red: 0, green: 0.7, blue: 0, alpha: 0.7))
         optionsButton.addTarget(self, action: #selector(optionsTapped), for: .touchUpInside)
         view.addSubview(optionsButton)
         optionsButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(startGameButton.snp.bottom).offset(30)
+            make.top.equalTo(dailySeedButton.snp.bottom).offset(30)
             make.width.equalTo(250)
             make.height.equalTo(60)
         }
@@ -112,6 +124,21 @@ class MainMenuViewController: UIViewController {
         
         // Push GameViewController
         let gameVC = GameViewController()
+        navigationController?.pushViewController(gameVC, animated: false)
+    }
+    
+    @objc private func dailySeedTapped() {
+        // Haptic feedback
+        let vibrationEnabled = UserDefaults.standard.object(forKey: "vibrationEnabled") as? Bool ?? true
+        if vibrationEnabled {
+            let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+            feedbackGenerator.prepare()
+            feedbackGenerator.impactOccurred()
+        }
+        
+        // Push GameViewController with daily seed
+        let gameVC = GameViewController()
+        gameVC.isDailySeedMode = true
         navigationController?.pushViewController(gameVC, animated: false)
     }
     

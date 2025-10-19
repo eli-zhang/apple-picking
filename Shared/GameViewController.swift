@@ -28,6 +28,8 @@ class GameViewController: UIViewController {
     var audioPlayer: AVAudioPlayer?
     var gameOverView: UIView?
     var currentSeed: UInt64 = 0
+    var isManualSeed: Bool = false
+    var isDailySeedMode: Bool = false
     
     // UI Elements
     private var scoreLabel: UILabel!
@@ -54,8 +56,14 @@ class GameViewController: UIViewController {
     }
     
     func setupGame() {
-        // Generate random seed
-        currentSeed = UInt64.random(in: 1...UInt64.max)
+        // Generate seed based on mode
+        if isDailySeedMode {
+            currentSeed = generateDailySeed()
+            isManualSeed = false // Daily seeds are not considered manual
+        } else {
+            currentSeed = UInt64.random(in: 1...UInt64.max)
+            isManualSeed = false
+        }
         
         // Initialize game view
         gameView = GameView(frame: .zero)
@@ -73,6 +81,22 @@ class GameViewController: UIViewController {
         
         // Initialize the apple grid
         gameView.initializeGrid()
+    }
+    
+    func generateDailySeed() -> UInt64 {
+        let calendar = Calendar.current
+        let today = Date()
+        let components = calendar.dateComponents([.year, .month, .day], from: today)
+        
+        // Create a deterministic seed based on the date
+        let year = UInt64(components.year ?? 2024)
+        let month = UInt64(components.month ?? 1)
+        let day = UInt64(components.day ?? 1)
+        
+        // Combine date components to create a unique seed for the day
+        let dailySeed = (year * 10000) + (month * 100) + day
+        
+        return dailySeed
     }
     
     func setupUIElements() {
@@ -248,9 +272,18 @@ class GameViewController: UIViewController {
         gameOverView?.removeFromSuperview()
         gameOverView = nil
         
-        // Generate new random seed
-        currentSeed = UInt64.random(in: 1...UInt64.max)
-        gameView.currentSeed = currentSeed
+        // Generate seed based on mode
+        if isDailySeedMode {
+            // In daily seed mode, regenerate the same daily seed
+            currentSeed = generateDailySeed()
+            gameView.currentSeed = currentSeed
+            isManualSeed = false
+        } else {
+            // In normal mode, generate new random seed
+            currentSeed = UInt64.random(in: 1...UInt64.max)
+            gameView.currentSeed = currentSeed
+            isManualSeed = false
+        }
         
         // Reset timer and score
         timeRemaining = 120
@@ -501,37 +534,40 @@ class GameViewController: UIViewController {
   func endGame() {
       timer?.invalidate()
       
-      // Add score to high scores array
-      if score > 0 {
-        highScores.append(score)
-      }
-      
-      // Sort high scores in descending order
-      highScores.sort(by: >)
-      
-      // Keep only top 10 scores
-      if highScores.count > 10 {
-          highScores = Array(highScores.prefix(10))
-      }
-      
-      // Save high scores array
-      UserDefaults.standard.set(highScores, forKey: "highScoresArray")
-      
-      // Check for high score
-      if score > highScore {
-          highScore = score
-          UserDefaults.standard.set(highScore, forKey: "highScore")
-          UserDefaults.standard.synchronize()
+      // Only update high scores if not using a manual seed
+      if !isManualSeed {
+          // Add score to high scores array
+          if score > 0 {
+            highScores.append(score)
+          }
           
-          // Update high score label
-          highScoreLabel.text = "High Score: \(highScore)"
-      }
-      
-      // Submit score to global leaderboard
-      LeaderboardAPIClient.shared.submitScore(score) { success, error in
-          if !success, let error = error {
-              print("Failed to submit score: \(error.localizedDescription)")
-              // Could show a retry button or alert here
+          // Sort high scores in descending order
+          highScores.sort(by: >)
+          
+          // Keep only top 10 scores
+          if highScores.count > 10 {
+              highScores = Array(highScores.prefix(10))
+          }
+          
+          // Save high scores array
+          UserDefaults.standard.set(highScores, forKey: "highScoresArray")
+          
+          // Check for high score
+          if score > highScore {
+              highScore = score
+              UserDefaults.standard.set(highScore, forKey: "highScore")
+              UserDefaults.standard.synchronize()
+              
+              // Update high score label
+              highScoreLabel.text = "High Score: \(highScore)"
+          }
+          
+          // Submit score to global leaderboard
+          LeaderboardAPIClient.shared.submitScore(score) { success, error in
+              if !success, let error = error {
+                  print("Failed to submit score: \(error.localizedDescription)")
+                  // Could show a retry button or alert here
+              }
           }
       }
       
@@ -792,7 +828,7 @@ class GameViewController: UIViewController {
             containerView.transform = .identity
         })
       
-      if score > 0 {
+      if score > 0 && !isManualSeed {
         LeaderboardAPIClient.shared.submitScore(score) { [weak self] success, error in
           guard let self = self else { return }
           
@@ -1026,9 +1062,10 @@ class GameViewController: UIViewController {
         gameOverView?.removeFromSuperview()
         gameOverView = nil
         
-        // Set new seed
+        // Set new seed and mark as manual
         currentSeed = seed
         gameView.currentSeed = seed
+        isManualSeed = true
         
         // Reset all game state
         timeRemaining = 120
