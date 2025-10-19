@@ -14,16 +14,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        // Create a window with the window scene
         window = UIWindow(windowScene: windowScene)
         
-        // Create an instance of your game view controller
-        let gameViewController = GameViewController()
-        
-        // Set the root view controller of the window
-        window?.rootViewController = gameViewController
-        
-        // Make the window visible
+        let mainMenuVC = MainMenuViewController()
+        let navigationController = UINavigationController(rootViewController: mainMenuVC)
+        navigationController.isNavigationBarHidden = true
+              
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
 

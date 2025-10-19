@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+platform :ios, '16.0'
 
 target 'ApplePicking' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -8,4 +8,10 @@ target 'ApplePicking' do
   # Pods for ApplePicking
   pod 'SnapKit'
 
+end
+
+target 'ApplePickingAppClip' do
+  use_frameworks!
+
+  pod 'SnapKit'
 end

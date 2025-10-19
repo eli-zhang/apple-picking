@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,12 +13,46 @@
 		CA314E532DA26D3500AA8BD1 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA314E522DA26D3500AA8BD1 /* GameViewController.swift */; };
 		CA314E582DA26D3600AA8BD1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA314E572DA26D3600AA8BD1 /* Assets.xcassets */; };
 		CA314E5B2DA26D3600AA8BD1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA314E592DA26D3600AA8BD1 /* LaunchScreen.storyboard */; };
+		CA35B9192DAC22240009E49E /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA314E522DA26D3500AA8BD1 /* GameViewController.swift */; };
+		CA35B91A2DAC222E0009E49E /* apple picking tunes retro.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CADFB9972DA7984600F9ED0C /* apple picking tunes retro.mp3 */; };
+		CA35B92A2DD5C2640009E49E /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA35B9292DD5C2640009E49E /* MainMenuViewController.swift */; };
+		CA35B92B2DD5C2640009E49E /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA35B9292DD5C2640009E49E /* MainMenuViewController.swift */; };
+		CA5B3BC52EA453A5007F8C66 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5B3BC42EA453A5007F8C66 /* OptionsViewController.swift */; };
+		CA5B3BC62EA453A5007F8C66 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5B3BC42EA453A5007F8C66 /* OptionsViewController.swift */; };
+		CAA9B9E32DAC179E007E8177 /* ApplePickingAppClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = CAA9B9B92DAC179B007E8177 /* ApplePickingAppClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CADFB9982DA7984600F9ED0C /* apple picking tunes retro.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CADFB9972DA7984600F9ED0C /* apple picking tunes retro.mp3 */; };
+		D78CB23BDF956D785F40A1F1 /* Pods_ApplePickingAppClip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F01EAAAE6ECF0B2E65C905 /* Pods_ApplePickingAppClip.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		CAA9B9E12DAC179E007E8177 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CA314E432DA26D3500AA8BD1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CAA9B9B82DAC179B007E8177;
+			remoteInfo = ApplePickingAppClip;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CAA9B9E42DAC179E007E8177 /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				CAA9B9E32DAC179E007E8177 /* ApplePickingAppClip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		154682BD05FD2D8B89E56595 /* Pods-ApplePickingAppClip.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplePickingAppClip.debug.xcconfig"; path = "Target Support Files/Pods-ApplePickingAppClip/Pods-ApplePickingAppClip.debug.xcconfig"; sourceTree = "<group>"; };
 		25F93A34930D614D9149F531 /* Pods_ApplePicking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ApplePicking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38A78E76774883102A7D78F6 /* Pods-ApplePicking.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplePicking.release.xcconfig"; path = "Target Support Files/Pods-ApplePicking/Pods-ApplePicking.release.xcconfig"; sourceTree = "<group>"; };
+		6EB7DE10E3AF3A46C4C65F39 /* Pods-ApplePickingAppClip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplePickingAppClip.release.xcconfig"; path = "Target Support Files/Pods-ApplePickingAppClip/Pods-ApplePickingAppClip.release.xcconfig"; sourceTree = "<group>"; };
 		A7D7079A9D89B84B37007211 /* Pods-ApplePicking.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplePicking.debug.xcconfig"; path = "Target Support Files/Pods-ApplePicking/Pods-ApplePicking.debug.xcconfig"; sourceTree = "<group>"; };
 		CA314E4B2DA26D3500AA8BD1 /* ApplePicking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ApplePicking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA314E4E2DA26D3500AA8BD1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -27,8 +61,33 @@
 		CA314E572DA26D3600AA8BD1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CA314E5A2DA26D3600AA8BD1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CA314E5C2DA26D3600AA8BD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CA35B9292DD5C2640009E49E /* MainMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
+		CA5B3BC42EA453A5007F8C66 /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
+		CAA9B9B92DAC179B007E8177 /* ApplePickingAppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ApplePickingAppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CADFB9972DA7984600F9ED0C /* apple picking tunes retro.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "apple picking tunes retro.mp3"; sourceTree = "<group>"; };
+		E7F01EAAAE6ECF0B2E65C905 /* Pods_ApplePickingAppClip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ApplePickingAppClip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CAA9B9EB2DAC179E007E8177 /* Exceptions for "ApplePickingAppClip" folder in "ApplePickingAppClip" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = CAA9B9B82DAC179B007E8177 /* ApplePickingAppClip */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		CAA9B9BA2DAC179B007E8177 /* ApplePickingAppClip */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CAA9B9EB2DAC179E007E8177 /* Exceptions for "ApplePickingAppClip" folder in "ApplePickingAppClip" target */,
+			);
+			path = ApplePickingAppClip;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		CA314E482DA26D3500AA8BD1 /* Frameworks */ = {
@@ -36,6 +95,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4AF2B1647C4F925B3B71A365 /* Pods_ApplePicking.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CAA9B9B62DAC179B007E8177 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D78CB23BDF956D785F40A1F1 /* Pods_ApplePickingAppClip.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,6 +114,8 @@
 			children = (
 				A7D7079A9D89B84B37007211 /* Pods-ApplePicking.debug.xcconfig */,
 				38A78E76774883102A7D78F6 /* Pods-ApplePicking.release.xcconfig */,
+				154682BD05FD2D8B89E56595 /* Pods-ApplePickingAppClip.debug.xcconfig */,
+				6EB7DE10E3AF3A46C4C65F39 /* Pods-ApplePickingAppClip.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -54,7 +123,9 @@
 		CA314E422DA26D3500AA8BD1 = {
 			isa = PBXGroup;
 			children = (
+				CA35B9182DAC21C80009E49E /* Shared */,
 				CA314E4D2DA26D3500AA8BD1 /* ApplePicking */,
+				CAA9B9BA2DAC179B007E8177 /* ApplePickingAppClip */,
 				CA314E4C2DA26D3500AA8BD1 /* Products */,
 				538BE882B1FB6016C400D4CC /* Pods */,
 				CADB28E3618336E16E0ED8C2 /* Frameworks */,
@@ -65,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				CA314E4B2DA26D3500AA8BD1 /* ApplePicking.app */,
+				CAA9B9B92DAC179B007E8177 /* ApplePickingAppClip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -74,19 +146,29 @@
 			children = (
 				CA314E4E2DA26D3500AA8BD1 /* AppDelegate.swift */,
 				CA314E502DA26D3500AA8BD1 /* SceneDelegate.swift */,
-				CA314E522DA26D3500AA8BD1 /* GameViewController.swift */,
 				CA314E572DA26D3600AA8BD1 /* Assets.xcassets */,
 				CA314E592DA26D3600AA8BD1 /* LaunchScreen.storyboard */,
 				CA314E5C2DA26D3600AA8BD1 /* Info.plist */,
-				CADFB9972DA7984600F9ED0C /* apple picking tunes retro.mp3 */,
 			);
 			path = ApplePicking;
+			sourceTree = "<group>";
+		};
+		CA35B9182DAC21C80009E49E /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				CA314E522DA26D3500AA8BD1 /* GameViewController.swift */,
+				CA35B9292DD5C2640009E49E /* MainMenuViewController.swift */,
+				CA5B3BC42EA453A5007F8C66 /* OptionsViewController.swift */,
+				CADFB9972DA7984600F9ED0C /* apple picking tunes retro.mp3 */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		CADB28E3618336E16E0ED8C2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				25F93A34930D614D9149F531 /* Pods_ApplePicking.framework */,
+				E7F01EAAAE6ECF0B2E65C905 /* Pods_ApplePickingAppClip.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -103,15 +185,39 @@
 				CA314E482DA26D3500AA8BD1 /* Frameworks */,
 				CA314E492DA26D3500AA8BD1 /* Resources */,
 				E1CC863DBB0ED36849C27A78 /* [CP] Embed Pods Frameworks */,
+				CAA9B9E42DAC179E007E8177 /* Embed App Clips */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CAA9B9E22DAC179E007E8177 /* PBXTargetDependency */,
 			);
 			name = ApplePicking;
 			productName = ApplePicking;
 			productReference = CA314E4B2DA26D3500AA8BD1 /* ApplePicking.app */;
 			productType = "com.apple.product-type.application";
+		};
+		CAA9B9B82DAC179B007E8177 /* ApplePickingAppClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CAA9B9EC2DAC179E007E8177 /* Build configuration list for PBXNativeTarget "ApplePickingAppClip" */;
+			buildPhases = (
+				1FF4E4DB7AE6099A78F0F027 /* [CP] Check Pods Manifest.lock */,
+				CAA9B9B52DAC179B007E8177 /* Sources */,
+				CAA9B9B62DAC179B007E8177 /* Frameworks */,
+				CAA9B9B72DAC179B007E8177 /* Resources */,
+				A886D0736B67B9EAE7ECE4CA /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				CAA9B9BA2DAC179B007E8177 /* ApplePickingAppClip */,
+			);
+			name = ApplePickingAppClip;
+			productName = ApplePickingAppClip;
+			productReference = CAA9B9B92DAC179B007E8177 /* ApplePickingAppClip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
 		};
 /* End PBXNativeTarget section */
 
@@ -120,16 +226,18 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1430;
+				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					CA314E4A2DA26D3500AA8BD1 = {
 						CreatedOnToolsVersion = 14.3.1;
 					};
+					CAA9B9B82DAC179B007E8177 = {
+						CreatedOnToolsVersion = 16.0;
+					};
 				};
 			};
 			buildConfigurationList = CA314E462DA26D3500AA8BD1 /* Build configuration list for PBXProject "ApplePicking" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -137,11 +245,13 @@
 				Base,
 			);
 			mainGroup = CA314E422DA26D3500AA8BD1;
+			preferredProjectObjectVersion = 77;
 			productRefGroup = CA314E4C2DA26D3500AA8BD1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				CA314E4A2DA26D3500AA8BD1 /* ApplePicking */,
+				CAA9B9B82DAC179B007E8177 /* ApplePickingAppClip */,
 			);
 		};
 /* End PBXProject section */
@@ -157,9 +267,56 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CAA9B9B72DAC179B007E8177 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CA35B91A2DAC222E0009E49E /* apple picking tunes retro.mp3 in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1FF4E4DB7AE6099A78F0F027 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ApplePickingAppClip-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A886D0736B67B9EAE7ECE4CA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ApplePickingAppClip/Pods-ApplePickingAppClip-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ApplePickingAppClip/Pods-ApplePickingAppClip-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ApplePickingAppClip/Pods-ApplePickingAppClip-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		C439513EFE95A81320FC7347 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -206,13 +363,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA35B92A2DD5C2640009E49E /* MainMenuViewController.swift in Sources */,
 				CA314E532DA26D3500AA8BD1 /* GameViewController.swift in Sources */,
 				CA314E4F2DA26D3500AA8BD1 /* AppDelegate.swift in Sources */,
 				CA314E512DA26D3500AA8BD1 /* SceneDelegate.swift in Sources */,
+				CA5B3BC52EA453A5007F8C66 /* OptionsViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CAA9B9B52DAC179B007E8177 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CA35B9192DAC22240009E49E /* GameViewController.swift in Sources */,
+				CA35B92B2DD5C2640009E49E /* MainMenuViewController.swift in Sources */,
+				CA5B3BC62EA453A5007F8C66 /* OptionsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CAA9B9E22DAC179E007E8177 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CAA9B9B82DAC179B007E8177 /* ApplePickingAppClip */;
+			targetProxy = CAA9B9E12DAC179E007E8177 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		CA314E592DA26D3600AA8BD1 /* LaunchScreen.storyboard */ = {
@@ -346,23 +523,27 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 37AKFHT6H5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ApplePicking/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Apple Picking";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.arcade-games";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = elizhang.ApplePicking;
+				PRODUCT_BUNDLE_IDENTIFIER = elizhang.ApplePickingGame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -375,22 +556,103 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 37AKFHT6H5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ApplePicking/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Apple Picking";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.arcade-games";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = elizhang.ApplePicking;
+				PRODUCT_BUNDLE_IDENTIFIER = elizhang.ApplePickingGame;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CAA9B9E52DAC179E007E8177 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 154682BD05FD2D8B89E56595 /* Pods-ApplePickingAppClip.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ApplePickingAppClip/ApplePickingAppClip.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 37AKFHT6H5;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ApplePickingAppClip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ApplePicking;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.arcade-games";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = elizhang.ApplePickingGame.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CAA9B9E62DAC179E007E8177 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6EB7DE10E3AF3A46C4C65F39 /* Pods-ApplePickingAppClip.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ApplePickingAppClip/ApplePickingAppClip.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 37AKFHT6H5;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ApplePickingAppClip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ApplePicking;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.arcade-games";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = elizhang.ApplePickingGame.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -415,6 +677,15 @@
 			buildConfigurations = (
 				CA314E602DA26D3600AA8BD1 /* Debug */,
 				CA314E612DA26D3600AA8BD1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CAA9B9EC2DAC179E007E8177 /* Build configuration list for PBXNativeTarget "ApplePickingAppClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CAA9B9E52DAC179E007E8177 /* Debug */,
+				CAA9B9E62DAC179E007E8177 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
