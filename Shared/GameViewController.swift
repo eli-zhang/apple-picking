@@ -3,6 +3,20 @@ import SpriteKit
 import AVFoundation
 import SnapKit
 
+// Seeded random number generator for deterministic grid generation
+struct SeededRandomNumberGenerator: RandomNumberGenerator {
+    private var state: UInt64
+    
+    init(seed: UInt64) {
+        self.state = seed
+    }
+    
+    mutating func next() -> UInt64 {
+        state = state &* 1103515245 &+ 12345
+        return state
+    }
+}
+
 class GameViewController: UIViewController {
     var gameView: GameView!
     var timer: Timer?
@@ -13,6 +27,7 @@ class GameViewController: UIViewController {
     var initialTime: Int = 120
     var audioPlayer: AVAudioPlayer?
     var gameOverView: UIView?
+    var currentSeed: UInt64 = 0
     
     // UI Elements
     private var scoreLabel: UILabel!
@@ -39,8 +54,12 @@ class GameViewController: UIViewController {
     }
     
     func setupGame() {
+        // Generate random seed
+        currentSeed = UInt64.random(in: 1...UInt64.max)
+        
         // Initialize game view
         gameView = GameView(frame: .zero)
+        gameView.currentSeed = currentSeed
         view.addSubview(gameView)
         gameView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -65,6 +84,12 @@ class GameViewController: UIViewController {
         scoreLabel.textAlignment = .center
         scoreLabel.layer.cornerRadius = 10
         scoreLabel.clipsToBounds = true
+        scoreLabel.isUserInteractionEnabled = true
+        
+        // Add tap gesture to show seed menu
+        let seedMenuGesture = UITapGestureRecognizer(target: self, action: #selector(showSeedMenu))
+        scoreLabel.addGestureRecognizer(seedMenuGesture)
+        
         view.addSubview(scoreLabel)
         scoreLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -222,6 +247,10 @@ class GameViewController: UIViewController {
         // Remove game over view if it exists
         gameOverView?.removeFromSuperview()
         gameOverView = nil
+        
+        // Generate new random seed
+        currentSeed = UInt64.random(in: 1...UInt64.max)
+        gameView.currentSeed = currentSeed
         
         // Reset timer and score
         timeRemaining = 120
@@ -829,6 +858,196 @@ class GameViewController: UIViewController {
         // Update score label
         scoreLabel.text = "Score: \(score)"
     }
+    
+    @objc func showSeedMenu() {
+        // Haptic feedback
+        provideHapticFeedback(style: .light)
+        
+        // Create seed menu view
+        let seedMenuView = UIView()
+        seedMenuView.backgroundColor = UIColor(white: 0, alpha: 0.7)
+        seedMenuView.alpha = 0
+        view.addSubview(seedMenuView)
+        seedMenuView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        // Container view
+        let containerView = UIView()
+        containerView.backgroundColor = UIColor(white: 1, alpha: 0.95)
+        containerView.layer.cornerRadius = 20
+        containerView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        seedMenuView.addSubview(containerView)
+        containerView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(300)
+            make.height.equalTo(300)
+        }
+        
+        // Title
+        let titleLabel = UILabel()
+        titleLabel.text = "Seed Options"
+        titleLabel.textAlignment = .center
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 24)
+        titleLabel.textColor = UIColor(red: 0, green: 0.7, blue: 0, alpha: 1.0)
+        containerView.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(20)
+            make.left.right.equalToSuperview()
+            make.height.equalTo(30)
+        }
+        
+        // Current seed display
+        let seedLabel = UILabel()
+        seedLabel.text = "Current Seed: \(currentSeed)"
+        seedLabel.textAlignment = .center
+        seedLabel.font = UIFont.systemFont(ofSize: 16)
+        seedLabel.textColor = UIColor.darkGray
+        containerView.addSubview(seedLabel)
+        seedLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(20)
+            make.left.right.equalToSuperview().inset(20)
+            make.height.equalTo(30)
+        }
+        
+        // Copy Seed button
+        let copySeedButton = UIButton()
+        copySeedButton.setTitle("Copy Seed", for: .normal)
+        copySeedButton.backgroundColor = UIColor(red: 0, green: 0.7, blue: 0, alpha: 1.0)
+        copySeedButton.layer.cornerRadius = 10
+        copySeedButton.addTarget(self, action: #selector(copySeedToClipboard), for: .touchUpInside)
+        containerView.addSubview(copySeedButton)
+        copySeedButton.snp.makeConstraints { make in
+            make.top.equalTo(seedLabel.snp.bottom).offset(20)
+            make.left.right.equalToSuperview().inset(30)
+            make.height.equalTo(50)
+        }
+        
+        // Enter New Seed button
+        let enterSeedButton = UIButton()
+        enterSeedButton.setTitle("Enter New Seed", for: .normal)
+        enterSeedButton.backgroundColor = UIColor(red: 0.2, green: 0.4, blue: 0.8, alpha: 1.0)
+        enterSeedButton.layer.cornerRadius = 10
+        enterSeedButton.addTarget(self, action: #selector(showSeedInputDialog), for: .touchUpInside)
+        containerView.addSubview(enterSeedButton)
+        enterSeedButton.snp.makeConstraints { make in
+            make.top.equalTo(copySeedButton.snp.bottom).offset(15)
+            make.left.right.equalToSuperview().inset(30)
+            make.height.equalTo(50)
+        }
+        
+        // Close button
+        let closeButton = UIButton()
+        closeButton.setTitle("Close", for: .normal)
+        closeButton.backgroundColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0)
+        closeButton.layer.cornerRadius = 10
+        closeButton.addTarget(self, action: #selector(closeSeedMenu(_:)), for: .touchUpInside)
+        containerView.addSubview(closeButton)
+        closeButton.snp.makeConstraints { make in
+            make.top.equalTo(enterSeedButton.snp.bottom).offset(15)
+            make.left.right.equalToSuperview().inset(30)
+            make.bottom.equalToSuperview().offset(-20)
+            make.height.equalTo(40)
+        }
+        
+        // Animate appearance
+        UIView.animate(withDuration: 0.3, animations: {
+            seedMenuView.alpha = 1
+            containerView.transform = .identity
+        })
+    }
+    
+    @objc func closeSeedMenu(_ sender: UIButton) {
+        // Haptic feedback
+        provideHapticFeedback(style: .light)
+        
+        // Remove seed menu view
+        if let seedMenuView = sender.superview?.superview {
+            UIView.animate(withDuration: 0.3, animations: {
+                seedMenuView.alpha = 0
+            }, completion: { _ in
+                seedMenuView.removeFromSuperview()
+            })
+        }
+    }
+    
+    @objc func copySeedToClipboard() {
+        UIPasteboard.general.string = String(currentSeed)
+        
+        // Show feedback to user
+        let alert = UIAlertController(title: "Seed Copied", message: "Seed \(currentSeed) has been copied to clipboard", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+        
+        // Close the seed menu
+        if let seedMenuView = view.subviews.first(where: { $0.backgroundColor == UIColor(white: 0, alpha: 0.7) }) {
+            UIView.animate(withDuration: 0.3, animations: {
+                seedMenuView.alpha = 0
+            }, completion: { _ in
+                seedMenuView.removeFromSuperview()
+            })
+        }
+    }
+    
+  @objc func showSeedInputDialog() {
+        let alert = UIAlertController(title: "Enter Seed", message: "Enter a seed number to generate the same grid pattern", preferredStyle: .alert)
+        
+        alert.addTextField { textField in
+            textField.placeholder = "Enter seed number"
+            textField.keyboardType = .numberPad
+        }
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Use Seed", style: .default) { _ in
+            if let text = alert.textFields?.first?.text,
+               let seed = UInt64(text) {
+                // Restart the game completely with the new seed
+                self.restartGameWithSeed(seed)
+            }
+        })
+        
+        present(alert, animated: true)
+        
+        // Close the seed menu
+        if let seedMenuView = view.subviews.first(where: { $0.backgroundColor == UIColor(white: 0, alpha: 0.7) }) {
+            UIView.animate(withDuration: 0.3, animations: {
+                seedMenuView.alpha = 0
+            }, completion: { _ in
+                seedMenuView.removeFromSuperview()
+            })
+        }
+    }
+    
+    func restartGameWithSeed(_ seed: UInt64) {
+        // Stop current game
+        timer?.invalidate()
+        
+        // Remove game over view if it exists
+        gameOverView?.removeFromSuperview()
+        gameOverView = nil
+        
+        // Set new seed
+        currentSeed = seed
+        gameView.currentSeed = seed
+        
+        // Reset all game state
+        timeRemaining = 120
+        initialTime = timeRemaining
+        score = 0
+        
+        // Update UI
+        scoreLabel.text = "Score: 0"
+        timerBar.progress = 1.0
+        
+        // Initialize grid with new seed
+        gameView.initializeGrid()
+        
+        // Restart timer
+        startTimer()
+        
+        // Restart background music
+        restartBackgroundMusic()
+    }
   
   func fetchCurrentRank() {
       LeaderboardAPIClient.shared.fetchGlobalHighScores { [weak self] result in
@@ -884,6 +1103,7 @@ class GameViewController: UIViewController {
 
 class GameView: UIView {
     private var feedbackGenerator: UIImpactFeedbackGenerator?
+    var currentSeed: UInt64 = 0
     
     private func shouldProvideHapticFeedback() -> Bool {
         let vibrationEnabled = UserDefaults.standard.object(forKey: "vibrationEnabled") as? Bool ?? true
@@ -1052,6 +1272,9 @@ class GameView: UIView {
         // Create new grid
         grid = []
         
+        // Create seeded random number generator
+        var rng = SeededRandomNumberGenerator(seed: currentSeed)
+        
         for row in 0..<gridHeight {
             var rowCells: [AppleCell] = []
             
@@ -1059,7 +1282,7 @@ class GameView: UIView {
                 let cell = AppleCell()
                 cell.row = row
                 cell.col = col
-                cell.setValue(Int.random(in: 1...9)) // Random number 1-9
+                cell.setValue(Int.random(in: 1...9, using: &rng)) // Seeded random number 1-9
                 
                 gridContainer.addSubview(cell)
                 cell.snp.makeConstraints { make in
