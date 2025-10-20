@@ -66,7 +66,7 @@ class MainMenuViewController: UIViewController {
         }
         
         // Create daily seed button
-        dailySeedButton = createButton(title: "Daily Seed", backgroundColor: UIColor(red: 0.2, green: 0.4, blue: 0.8, alpha: 0.7))
+        dailySeedButton = createButton(title: "Daily Seed", backgroundColor: UIColor(red: 0.9, green: 0.2, blue: 0.2, alpha: 0.7))
         dailySeedButton.addTarget(self, action: #selector(dailySeedTapped), for: .touchUpInside)
         view.addSubview(dailySeedButton)
         dailySeedButton.snp.makeConstraints { make in
