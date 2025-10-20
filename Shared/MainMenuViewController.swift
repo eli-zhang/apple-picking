@@ -71,7 +71,7 @@ class MainMenuViewController: UIViewController {
         view.addSubview(dailySeedButton)
         dailySeedButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(startGameButton.snp.bottom).offset(30)
+            make.top.equalTo(startGameButton.snp.bottom).offset(20)
             make.width.equalTo(250)
             make.height.equalTo(60)
         }
@@ -82,7 +82,7 @@ class MainMenuViewController: UIViewController {
         view.addSubview(optionsButton)
         optionsButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(dailySeedButton.snp.bottom).offset(30)
+            make.top.equalTo(dailySeedButton.snp.bottom).offset(20)
             make.width.equalTo(250)
             make.height.equalTo(60)
         }

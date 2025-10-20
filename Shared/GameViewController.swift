@@ -42,6 +42,11 @@ class GameViewController: UIViewController {
     // High scores array
     private var highScores: [Int] = []
     
+    // Daily high scores tracking
+    private var dailyHighScores: [Int] = []
+    private var dailyHighScoresDate: String = ""
+    private var dailyHighScore: Int = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupGame()
@@ -52,7 +57,11 @@ class GameViewController: UIViewController {
         if let savedHighScores = UserDefaults.standard.array(forKey: "highScoresArray") as? [Int] {
             highScores = savedHighScores
         }
-        highScoreLabel.text = "High Score: \(highScore)"
+        // Check and reset daily scores if needed
+        checkAndResetDailyScores()
+        
+        // Set initial high score display
+        updateHighScoreDisplay()
     }
     
     func setupGame() {
@@ -76,6 +85,9 @@ class GameViewController: UIViewController {
         // Set up UI elements
         setupUIElements()
         
+        // Update high score display for current mode
+        updateHighScoreDisplay()
+        
         // Start game timer
         startTimer()
         
@@ -97,6 +109,50 @@ class GameViewController: UIViewController {
         let dailySeed = (year * 10000) + (month * 100) + day
         
         return dailySeed
+    }
+    
+    func getCurrentDateString() -> String {
+        let calendar = Calendar.current
+        let today = Date()
+        let components = calendar.dateComponents([.year, .month, .day], from: today)
+        
+        let year = components.year ?? 2024
+        let month = components.month ?? 1
+        let day = components.day ?? 1
+        
+        return "\(year)-\(month)-\(day)"
+    }
+    
+    func checkAndResetDailyScores() {
+        let currentDate = getCurrentDateString()
+        
+        // Load saved date and scores
+        dailyHighScoresDate = UserDefaults.standard.string(forKey: "dailyHighScoresDate") ?? ""
+        if let savedDailyScores = UserDefaults.standard.array(forKey: "dailyHighScoresArray") as? [Int] {
+            dailyHighScores = savedDailyScores
+        }
+        dailyHighScore = UserDefaults.standard.integer(forKey: "dailyHighScore")
+        
+        // If the date has changed, reset daily scores
+        if dailyHighScoresDate != currentDate {
+            dailyHighScores = []
+            dailyHighScore = 0
+            dailyHighScoresDate = currentDate
+            
+            // Save reset scores and new date
+            UserDefaults.standard.set(dailyHighScores, forKey: "dailyHighScoresArray")
+            UserDefaults.standard.set(dailyHighScore, forKey: "dailyHighScore")
+            UserDefaults.standard.set(dailyHighScoresDate, forKey: "dailyHighScoresDate")
+            UserDefaults.standard.synchronize()
+        }
+    }
+    
+    func updateHighScoreDisplay() {
+        if isDailySeedMode {
+            highScoreLabel.text = "Daily High: \(dailyHighScore)"
+        } else {
+            highScoreLabel.text = "High Score: \(highScore)"
+        }
     }
     
     func setupUIElements() {
@@ -399,8 +455,12 @@ class GameViewController: UIViewController {
           containerView.transform = .identity
       })
       
-      // Fetch global scores
-      LeaderboardAPIClient.shared.fetchGlobalHighScores { result in
+      // Fetch appropriate scores based on mode
+      let fetchFunction = isDailySeedMode ? 
+          LeaderboardAPIClient.shared.fetchDailyHighScores : 
+          LeaderboardAPIClient.shared.fetchGlobalHighScores
+      
+      fetchFunction { result in
           DispatchQueue.main.async {
               activityIndicator.stopAnimating()
               activityIndicator.removeFromSuperview()
@@ -514,8 +574,12 @@ class GameViewController: UIViewController {
               make.center.equalToSuperview()
           }
           
-          // Try fetching again
-          LeaderboardAPIClient.shared.fetchGlobalHighScores { result in
+          // Try fetching again with appropriate API
+          let fetchFunction = self.isDailySeedMode ? 
+              LeaderboardAPIClient.shared.fetchDailyHighScores : 
+              LeaderboardAPIClient.shared.fetchGlobalHighScores
+          
+          fetchFunction { result in
               DispatchQueue.main.async {
                   activityIndicator.stopAnimating()
                   activityIndicator.removeFromSuperview()
@@ -536,33 +600,73 @@ class GameViewController: UIViewController {
       
       // Only update high scores if not using a manual seed
       if !isManualSeed {
-          // Add score to high scores array
-          if score > 0 {
-            highScores.append(score)
-          }
-          
-          // Sort high scores in descending order
-          highScores.sort(by: >)
-          
-          // Keep only top 10 scores
-          if highScores.count > 10 {
-              highScores = Array(highScores.prefix(10))
-          }
-          
-          // Save high scores array
-          UserDefaults.standard.set(highScores, forKey: "highScoresArray")
-          
-          // Check for high score
-          if score > highScore {
-              highScore = score
-              UserDefaults.standard.set(highScore, forKey: "highScore")
-              UserDefaults.standard.synchronize()
+          if isDailySeedMode {
+              // Update daily high scores
+              if score > 0 {
+                dailyHighScores.append(score)
+              }
               
-              // Update high score label
-              highScoreLabel.text = "High Score: \(highScore)"
+              // Sort daily high scores in descending order
+              dailyHighScores.sort(by: >)
+              
+              // Keep only top 10 daily scores
+              if dailyHighScores.count > 10 {
+                  dailyHighScores = Array(dailyHighScores.prefix(10))
+              }
+              
+              // Check for daily high score
+              if score > dailyHighScore {
+                  dailyHighScore = score
+                  UserDefaults.standard.set(dailyHighScore, forKey: "dailyHighScore")
+                  UserDefaults.standard.synchronize()
+                  
+                  // Update high score label
+                  updateHighScoreDisplay()
+              }
+              
+              // Save daily high scores array
+              UserDefaults.standard.set(dailyHighScores, forKey: "dailyHighScoresArray")
+              UserDefaults.standard.synchronize()
+          } else {
+              // Update global high scores
+              if score > 0 {
+                highScores.append(score)
+              }
+              
+              // Sort high scores in descending order
+              highScores.sort(by: >)
+              
+              // Keep only top 10 scores
+              if highScores.count > 10 {
+                  highScores = Array(highScores.prefix(10))
+              }
+              
+              // Save high scores array
+              UserDefaults.standard.set(highScores, forKey: "highScoresArray")
+              
+              // Check for high score
+              if score > highScore {
+                  highScore = score
+                  UserDefaults.standard.set(highScore, forKey: "highScore")
+                  UserDefaults.standard.synchronize()
+                  
+                  // Update high score label
+                  highScoreLabel.text = "High Score: \(highScore)"
+              }
           }
-          
-          // Submit score to global leaderboard
+      }
+      
+      // Submit score to appropriate leaderboard
+      if isDailySeedMode {
+          // Submit to daily leaderboard
+          LeaderboardAPIClient.shared.submitDailyScore(score) { success, error in
+              if !success, let error = error {
+                  print("Failed to submit daily score: \(error.localizedDescription)")
+                  // Could show a retry button or alert here
+              }
+          }
+      } else {
+          // Submit to global leaderboard
           LeaderboardAPIClient.shared.submitScore(score) { success, error in
               if !success, let error = error {
                   print("Failed to submit score: \(error.localizedDescription)")
@@ -598,9 +702,10 @@ class GameViewController: UIViewController {
             make.height.equalTo(500)
         }
         
-        // Title
+        // Title based on mode
         let titleLabel = UILabel()
-        titleLabel.text = "Top 10 High Scores"
+        let titleText = isDailySeedMode ? "Daily High Scores" : "Top 10 High Scores"
+        titleLabel.text = titleText
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.boldSystemFont(ofSize: 24)
         titleLabel.textColor = UIColor(red: 0, green: 0.7, blue: 0, alpha: 1.0)
@@ -624,10 +729,12 @@ class GameViewController: UIViewController {
             make.bottom.equalToSuperview().offset(-150)
         }
         
-        highScores.sort(by: >)
+        // Use appropriate scores based on mode
+        let scoresToShow = isDailySeedMode ? dailyHighScores : highScores
+        let sortedScores = scoresToShow.sorted(by: >)
       
         // Add score labels
-        for (index, score) in highScores.prefix(10).enumerated() {
+        for (index, score) in sortedScores.prefix(10).enumerated() {
             let rankLabel = UILabel()
             rankLabel.text = "\(index + 1). \(score)"
             rankLabel.textAlignment = .left
@@ -636,9 +743,9 @@ class GameViewController: UIViewController {
             scoresStackView.addArrangedSubview(rankLabel)
         }
         
-      if highScores.count < 10 {
+      if sortedScores.count < 10 {
         // If we have fewer than 10 scores, add placeholders
-        for _ in highScores.count..<10 {
+        for _ in sortedScores.count..<10 {
             let placeholder = UILabel()
             placeholder.text = "---"
             placeholder.textAlignment = .left
@@ -829,25 +936,53 @@ class GameViewController: UIViewController {
         })
       
       if score > 0 && !isManualSeed {
-        LeaderboardAPIClient.shared.submitScore(score) { [weak self] success, error in
-          guard let self = self else { return }
-          
-          DispatchQueue.main.async {
-            if success {
-              self.fetchCurrentRank()
-            } else if let error = error {
-              // Show error message
-              let errorLabel = UILabel()
-              errorLabel.text = "Failed to submit score: \(error.localizedDescription)"
-              errorLabel.textAlignment = .center
-              errorLabel.textColor = .red
-              errorLabel.numberOfLines = 0
-              errorLabel.font = UIFont.systemFont(ofSize: 12)
-              containerView.addSubview(errorLabel)
-              errorLabel.snp.makeConstraints { make in
-                make.bottom.equalTo(playAgainButton.snp.top).offset(-10)
-                make.centerX.equalToSuperview()
-                make.width.equalTo(250)
+        if isDailySeedMode {
+          // Submit to daily leaderboard
+          LeaderboardAPIClient.shared.submitDailyScore(score) { [weak self] success, error in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+              if success {
+                self.fetchCurrentRank()
+              } else if let error = error {
+                // Show error message
+                let errorLabel = UILabel()
+                errorLabel.text = "Failed to submit daily score: \(error.localizedDescription)"
+                errorLabel.textAlignment = .center
+                errorLabel.textColor = .red
+                errorLabel.numberOfLines = 0
+                errorLabel.font = UIFont.systemFont(ofSize: 12)
+                containerView.addSubview(errorLabel)
+                errorLabel.snp.makeConstraints { make in
+                  make.bottom.equalTo(playAgainButton.snp.top).offset(-10)
+                  make.centerX.equalToSuperview()
+                  make.width.equalTo(250)
+                }
+              }
+            }
+          }
+        } else {
+          // Submit to global leaderboard
+          LeaderboardAPIClient.shared.submitScore(score) { [weak self] success, error in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+              if success {
+                self.fetchCurrentRank()
+              } else if let error = error {
+                // Show error message
+                let errorLabel = UILabel()
+                errorLabel.text = "Failed to submit score: \(error.localizedDescription)"
+                errorLabel.textAlignment = .center
+                errorLabel.textColor = .red
+                errorLabel.numberOfLines = 0
+                errorLabel.font = UIFont.systemFont(ofSize: 12)
+                containerView.addSubview(errorLabel)
+                errorLabel.snp.makeConstraints { make in
+                  make.bottom.equalTo(playAgainButton.snp.top).offset(-10)
+                  make.centerX.equalToSuperview()
+                  make.width.equalTo(250)
+                }
               }
             }
           }
@@ -1087,7 +1222,11 @@ class GameViewController: UIViewController {
     }
   
   func fetchCurrentRank() {
-      LeaderboardAPIClient.shared.fetchGlobalHighScores { [weak self] result in
+      let fetchFunction = isDailySeedMode ? 
+          LeaderboardAPIClient.shared.fetchDailyHighScores : 
+          LeaderboardAPIClient.shared.fetchGlobalHighScores
+      
+      fetchFunction { [weak self] result in
           guard let self = self else { return }
           
           DispatchQueue.main.async {
@@ -1102,9 +1241,10 @@ class GameViewController: UIViewController {
                       if let gameOverView = self.gameOverView,
                          let containerView = gameOverView.subviews.first(where: {  $0.layer.cornerRadius == 20 }) {
                           
-                          // Global rank label
+                          // Rank label with appropriate text
                           let rankLabel = UILabel()
-                          rankLabel.text = "Global Rank: #\(rank)"
+                          let rankText = self.isDailySeedMode ? "Daily Rank: #\(rank)" : "Global Rank: #\(rank)"
+                          rankLabel.text = rankText
                           rankLabel.textAlignment = .center
                           rankLabel.font = UIFont.boldSystemFont(ofSize: 18)
                           rankLabel.textColor = UIColor(red: 0, green: 0.7, blue: 0, alpha: 1.0)
@@ -1118,7 +1258,8 @@ class GameViewController: UIViewController {
                           
                           // Leaderboard button
                           let leaderboardButton = UIButton()
-                          leaderboardButton.setTitle("View Leaderboard", for: .normal)
+                          let buttonText = self.isDailySeedMode ? "View Daily Leaderboard" : "View Leaderboard"
+                          leaderboardButton.setTitle(buttonText, for: .normal)
                           leaderboardButton.backgroundColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1.0)
                           leaderboardButton.layer.cornerRadius = 10
                           leaderboardButton.addTarget(self, action: #selector(self.showGlobalLeaderboard), for: .touchUpInside)
@@ -1808,9 +1949,90 @@ class LeaderboardAPIClient {
         task.resume()
     }
     
+    // Submit a score to the daily leaderboard
+    func submitDailyScore(_ score: Int, completion: @escaping (Bool, Error?) -> Void) {
+        let endpoint = "\(baseURL)/scores-daily"
+        
+        // Get current date components
+        let calendar = Calendar.current
+        let today = Date()
+        let components = calendar.dateComponents([.year, .month, .day], from: today)
+        
+        // Create request body with date information
+        let scoreData: [String: Any] = [
+            "playerName": playerName,
+            "score": score,
+            "timestamp": Date().timeIntervalSince1970,
+            "date": [
+                "year": components.year ?? 2024,
+                "month": components.month ?? 1,
+                "day": components.day ?? 1
+            ]
+        ]
+        
+        guard let url = URL(string: endpoint),
+              let jsonData = try? JSONSerialization.data(withJSONObject: scoreData) else {
+            completion(false, NSError(domain: "LeaderboardAPIError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to serialize score data"]))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = jsonData
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(false, error)
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                completion(false, NSError(domain: "LeaderboardAPIError", code: 2, userInfo: [NSLocalizedDescriptionKey: "Server returned an error"]))
+                return
+            }
+            
+            completion(true, nil)
+        }
+        
+        task.resume()
+    }
+    
     // Fetch global high scores
     func fetchGlobalHighScores(completion: @escaping (Result<[LeaderboardEntry], Error>) -> Void) {
         let endpoint = "\(baseURL)/scores"
+        
+        guard let url = URL(string: endpoint) else {
+            completion(.failure(NSError(domain: "LeaderboardAPIError", code: 3, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])))
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let data = data else {
+                completion(.failure(NSError(domain: "LeaderboardAPIError", code: 4, userInfo: [NSLocalizedDescriptionKey: "No data received"])))
+                return
+            }
+            
+            do {
+                let entries = try JSONDecoder().decode([LeaderboardEntry].self, from: data)
+                completion(.success(entries))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        
+        task.resume()
+    }
+    
+    // Fetch daily high scores
+    func fetchDailyHighScores(completion: @escaping (Result<[LeaderboardEntry], Error>) -> Void) {
+        let endpoint = "\(baseURL)/scores-daily"
         
         guard let url = URL(string: endpoint) else {
             completion(.failure(NSError(domain: "LeaderboardAPIError", code: 3, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])))
