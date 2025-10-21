@@ -14,13 +14,13 @@
 		CA314E582DA26D3600AA8BD1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA314E572DA26D3600AA8BD1 /* Assets.xcassets */; };
 		CA314E5B2DA26D3600AA8BD1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CA314E592DA26D3600AA8BD1 /* LaunchScreen.storyboard */; };
 		CA35B9192DAC22240009E49E /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA314E522DA26D3500AA8BD1 /* GameViewController.swift */; };
-		CA35B91A2DAC222E0009E49E /* apple picking tunes retro.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CADFB9972DA7984600F9ED0C /* apple picking tunes retro.mp3 */; };
 		CA35B92A2DD5C2640009E49E /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA35B9292DD5C2640009E49E /* MainMenuViewController.swift */; };
 		CA35B92B2DD5C2640009E49E /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA35B9292DD5C2640009E49E /* MainMenuViewController.swift */; };
 		CA5B3BC52EA453A5007F8C66 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5B3BC42EA453A5007F8C66 /* OptionsViewController.swift */; };
 		CA5B3BC62EA453A5007F8C66 /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5B3BC42EA453A5007F8C66 /* OptionsViewController.swift */; };
+		CA9812E52EA7051E00274F7D /* apple picking tunes retro.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CA9812E42EA7051E00274F7D /* apple picking tunes retro.mp3 */; };
+		CA9812E62EA7051E00274F7D /* apple picking tunes retro.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CA9812E42EA7051E00274F7D /* apple picking tunes retro.mp3 */; };
 		CAA9B9E32DAC179E007E8177 /* ApplePickingAppClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = CAA9B9B92DAC179B007E8177 /* ApplePickingAppClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		CADFB9982DA7984600F9ED0C /* apple picking tunes retro.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CADFB9972DA7984600F9ED0C /* apple picking tunes retro.mp3 */; };
 		D78CB23BDF956D785F40A1F1 /* Pods_ApplePickingAppClip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F01EAAAE6ECF0B2E65C905 /* Pods_ApplePickingAppClip.framework */; };
 /* End PBXBuildFile section */
 
@@ -63,8 +63,8 @@
 		CA314E5C2DA26D3600AA8BD1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CA35B9292DD5C2640009E49E /* MainMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		CA5B3BC42EA453A5007F8C66 /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
+		CA9812E42EA7051E00274F7D /* apple picking tunes retro.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "apple picking tunes retro.mp3"; sourceTree = "<group>"; };
 		CAA9B9B92DAC179B007E8177 /* ApplePickingAppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ApplePickingAppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CADFB9972DA7984600F9ED0C /* apple picking tunes retro.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "apple picking tunes retro.mp3"; sourceTree = "<group>"; };
 		E7F01EAAAE6ECF0B2E65C905 /* Pods_ApplePickingAppClip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ApplePickingAppClip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -159,7 +159,7 @@
 				CA314E522DA26D3500AA8BD1 /* GameViewController.swift */,
 				CA35B9292DD5C2640009E49E /* MainMenuViewController.swift */,
 				CA5B3BC42EA453A5007F8C66 /* OptionsViewController.swift */,
-				CADFB9972DA7984600F9ED0C /* apple picking tunes retro.mp3 */,
+				CA9812E42EA7051E00274F7D /* apple picking tunes retro.mp3 */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -263,7 +263,7 @@
 			files = (
 				CA314E5B2DA26D3600AA8BD1 /* LaunchScreen.storyboard in Resources */,
 				CA314E582DA26D3600AA8BD1 /* Assets.xcassets in Resources */,
-				CADFB9982DA7984600F9ED0C /* apple picking tunes retro.mp3 in Resources */,
+				CA9812E52EA7051E00274F7D /* apple picking tunes retro.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,7 +271,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CA35B91A2DAC222E0009E49E /* apple picking tunes retro.mp3 in Resources */,
+				CA9812E62EA7051E00274F7D /* apple picking tunes retro.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

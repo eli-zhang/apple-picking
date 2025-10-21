@@ -96,25 +96,63 @@ class GameViewController: UIViewController {
     }
     
     func generateDailySeed() -> UInt64 {
-        let calendar = Calendar.current
-        let today = Date()
-        let components = calendar.dateComponents([.year, .month, .day], from: today)
+        // Create EST timezone
+        guard let estTimeZone = TimeZone(identifier: "America/New_York") else {
+            // Fallback to current time if EST timezone is not available
+            return UInt64(Date().timeIntervalSince1970)
+        }
         
-        // Create a deterministic seed based on the date
+        // Get current date in EST
+        let now = Date()
+        let calendar = Calendar.current
+        let estDate = now.addingTimeInterval(TimeInterval(estTimeZone.secondsFromGMT(for: now)))
+        
+        // Get date components for EST date
+        let components = calendar.dateComponents([.year, .month, .day], from: estDate)
+        
+        // Create a deterministic seed based on the EST date
         let year = UInt64(components.year ?? 2024)
         let month = UInt64(components.month ?? 1)
         let day = UInt64(components.day ?? 1)
         
         // Combine date components to create a unique seed for the day
-        let dailySeed = (year * 10000) + (month * 100) + day
+        let rawSeed = (year * 10000) + (month * 100) + day
         
-        return dailySeed
+        // Hash the seed using a simple hash function to make it less predictable
+        // while keeping it as a number
+        let hashedSeed = hashSeed(rawSeed)
+        
+        return hashedSeed
+    }
+    
+    private func hashSeed(_ seed: UInt64) -> UInt64 {
+        // Simple hash function that scrambles the bits while keeping it as a number
+        var hash = seed
+        hash = hash &* 0x9e3779b9 &+ 0x85ebca6b
+        hash ^= hash >> 13
+        hash = hash &* 0xc2b2ae35
+        hash ^= hash >> 16
+        return hash
     }
     
     func getCurrentDateString() -> String {
+        // Create EST timezone
+        guard let estTimeZone = TimeZone(identifier: "America/New_York") else {
+            // Fallback to current time if EST timezone is not available
+            let today = Date()
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.year, .month, .day], from: today)
+            let year = components.year ?? 2024
+            let month = components.month ?? 1
+            let day = components.day ?? 1
+            return "\(year)-\(month)-\(day)"
+        }
+        
+        // Get current date in EST
+        let now = Date()
         let calendar = Calendar.current
-        let today = Date()
-        let components = calendar.dateComponents([.year, .month, .day], from: today)
+        let estDate = now.addingTimeInterval(TimeInterval(estTimeZone.secondsFromGMT(for: now)))
+        let components = calendar.dateComponents([.year, .month, .day], from: estDate)
         
         let year = components.year ?? 2024
         let month = components.month ?? 1
@@ -304,7 +342,6 @@ class GameViewController: UIViewController {
     
     private func shouldProvideHapticFeedback() -> Bool {
         let vibrationEnabled = UserDefaults.standard.object(forKey: "vibrationEnabled") as? Bool ?? true
-        print("GameViewController - Vibration enabled: \(vibrationEnabled)")
         return vibrationEnabled
     }
     
@@ -995,7 +1032,15 @@ class GameViewController: UIViewController {
         
         let renderer = UIGraphicsImageRenderer(size: size)
         let appleImage = renderer.image { ctx in
-            // Draw apple shape
+            // Draw stem first (behind the apple)
+            let stemPath = UIBezierPath()
+            stemPath.move(to: CGPoint(x: size.width * 0.5, y: size.height * 0.15))
+            stemPath.addLine(to: CGPoint(x: size.width * 0.55, y: size.height * 0.0))
+            UIColor.brown.setStroke()
+            stemPath.lineWidth = 12
+            stemPath.stroke()
+            
+            // Draw apple shape (on top of stem)
             let rect = CGRect(x: size.width * 0.1,
                              y: size.height * 0.1,
                              width: size.width * 0.8,
@@ -1004,14 +1049,6 @@ class GameViewController: UIViewController {
             let path = UIBezierPath(ovalIn: rect)
             UIColor.red.setFill()
             path.fill()
-            
-            // Draw stem
-            let stemPath = UIBezierPath()
-            stemPath.move(to: CGPoint(x: size.width * 0.5, y: size.height * 0.1))
-            stemPath.addLine(to: CGPoint(x: size.width * 0.55, y: 0))
-            UIColor.brown.setStroke()
-            stemPath.lineWidth = 4
-            stemPath.stroke()
         }
         
         let imageView = UIImageView(image: appleImage)

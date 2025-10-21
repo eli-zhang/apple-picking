@@ -174,7 +174,7 @@ class MainMenuViewController: UIViewController {
         containerView.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.width.equalTo(320)
-            make.height.equalTo(300)
+            make.height.equalTo(270)
         }
         
         // Title
@@ -200,7 +200,7 @@ class MainMenuViewController: UIViewController {
         musicStackView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(30)
             make.left.right.equalToSuperview().inset(20)
-            make.height.equalTo(50)
+            make.height.equalTo(40)
         }
         
         // Vibration toggle section
@@ -211,9 +211,9 @@ class MainMenuViewController: UIViewController {
         )
         containerView.addSubview(vibrationStackView)
         vibrationStackView.snp.makeConstraints { make in
-            make.top.equalTo(musicStackView.snp.bottom).offset(20)
+            make.top.equalTo(musicStackView.snp.bottom).offset(10)
             make.left.right.equalToSuperview().inset(20)
-            make.height.equalTo(50)
+            make.height.equalTo(40)
         }
         
         // Close button
